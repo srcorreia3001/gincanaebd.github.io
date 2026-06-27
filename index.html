@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gincana Bíblica - Livro de Neemias</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --primary: #2c3e50;
+            --accent: #d35400;
+            --success: #27ae60;
+            --text: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .setup-section, .game-section {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #1a252f;
+        }
+
+        button.accent {
+            background-color: var(--accent);
+        }
+
+        button.accent:hover {
+            background-color: #b33900;
+        }
+
+        /* Placar */
+        .scoreboard {
+            display: flex;
+            justify-content: space-around;
+            background: #eef2f3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #dcdde1;
+        }
+
+        .team-score {
+            text-align: center;
+            flex: 1;
+        }
+
+        .team-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .score-val {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 5px 0;
+        }
+
+        /* Painel de Perguntas */
+        .question-card {
+            border: 2px solid #eef2f3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background: #fafbfc;
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .reference {
+            font-style: italic;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .answer-box {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-weight: bold;
+            border-left: 5px solid var(--success);
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🏆 Gincana Bíblica 🏆</h1>
+        <h2>Livro de Neemias</h2>
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+        <!-- TELA DE CONFIGURAÇÃO INICIAL -->
+        <div id="setupScreen" class="setup-section active">
+            <h3>Configuração das Equipes</h3>
+            <div class="form-group">
+                <label for="team1Input">Nome da Equipe 1:</label>
+                <input type="text" id="team1Input" value="Equipe Jerusalém">
+            </div>
+            <div class="form-group">
+                <label for="team2Input">Nome da Equipe 2:</label>
+                <input type="text" id="team2Input" value="Equipe Muros Fortes">
+            </div>
+            <button onclick="iniciarJogo()">Começar Gincana</button>
+        </div>
+
+        <!-- TELA DO JOGO -->
+        <div id="gameScreen" class="game-section">
+            <!-- Painel de Pontos -->
+            <div class="scoreboard">
+                <div class="team-score" id="scoreBlock1">
+                    <div class="team-name" id="nameTeam1">Equipe 1</div>
+                    <div class="score-val" id="valTeam1">0</div>
+                    <div style="display: flex; gap: 5px; justify-content: center;">
+                        <button style="padding: 5px 10px; width: auto;" onclick="alterarPontos(1, 10)">+10</button>
+                        <button style="padding: 5px 10px; width: auto; background:#c0392b;" onclick="alterarPontos(1, -10)">-10</button>
+                    </div>
+                </div>
+                <div style="border-left: 1px solid #ccc; margin: 0 10px;"></div>
+                <div class="team-score" id="scoreBlock2">
+                    <div class="team-name" id="nameTeam2">Equipe 2</div>
+                    <div class="score-val" id="valTeam2">0</div>
+                    <div style="display: flex; gap: 5px; justify-content: center;">
+                        <button style="padding: 5px 10px; width: auto;" onclick="alterarPontos(2, 10)">+10</button>
+                        <button style="padding: 5px 10px; width: auto; background:#c0392b;" onclick="alterarPontos(2, -10)">-10</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Área da Pergunta Atual -->
+            <div class="question-card">
+                <div style="font-weight: bold; color: var(--accent); margin-bottom: 5px;" id="questionNumber">Pergunta</div>
+                <div class="question-text" id="questionText">Clique no botão abaixo para sortear a primeira pergunta.</div>
+                <span class="reference" id="questionRef"></span>
+                
+                <div class="answer-box" id="answerBox">
+                    <strong>Resposta Correta:</strong> <span id="answerText"></span>
+                </div>
+            </div>
+
+            <!-- Botões de Ação do Jogo -->
+            <div class="controls">
+                <button class="full-width accent" id="btnSortear" onclick="sortearPergunta()">Sortear Pergunta Aleatória</button>
+                <button id="btnVerResposta" onclick="revelarResposta()" disabled>Revelar Resposta</button>
+                <button id="btnProxima" onclick="limparPainel()" disabled>Próxima Rodada</button>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px; color: #7f8c8d; font-size: 14px;">
+                Perguntas restantes no banco: <span id="contadorRestantes">0</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // BANCO DE DADOS DE PERGUNTAS (Exemplo estruturado para Neemias)
+        // Adicione mais perguntas neste array seguindo rigorosamente a mesma estrutura.
+        const bancoDePerguntas = [
+            { q: "Qual era a função ocupada por Neemias na corte do rei Artaxerxes?", a: "Copeiro do rei.", r: "Neemias 1:11" },
+            { q: "Quem trouxe as notícias a Neemias sobre a situação de miséria e os muros caídos de Jerusalém?", a: "Hanani, um de seus irmãos, junto com alguns homens de Judá.", r: "Neemias 1:2" },
+            { q: "Qual foi a primeira reação de Neemias ao ouvir sobre a destruição de Jerusalém?", a: "Chorou, lamentou por alguns dias, jejuou e orou diante do Deus dos céus.", r: "Neemias 1:4" },
+            { q: "Em qual cidade fortificada (capital de inverno) Neemias estava quando recebeu as notícias?", a: "Na cidadela de Susã.", r: "Neemias 1:1" },
+            { q: "Qual era o nome do rei a quem Neemias servia?", a: "Artaxerxes.", r: "Neemias 1:1" },
+            { q: "Por que o rei percebeu que havia algo de errado com Neemias?", a: "Porque o rosto de Neemias estava triste, algo que nunca havia acontecido antes na presença do rei.", r: "Neemias 2:1-2" },
+            { q: "Quais são os nomes dos dois principais opositores que zombaram e desprezaram os judeus no início da reconstrução?", a: "Sanbalate, o horonita, e Tobias, o oficial amonita.", r: "Neemias 2:10" },
+            { q: "Quantos dias Neemias ficou em Jerusalém antes de sair à noite para examinar os muros destruídos?", a: "Três dias.", r: "Neemias 2:11" },
+            { q: "Que animal Neemias montava enquanto inspecionava os muros caídos de Jerusalém à noite?", a: "Um animal de montaria (geralmente traduzido como jumento ou mula).", r: "Neemias 2:12" },
+            { q: "Qual oficial declarou zombando que se uma raposa subisse no muro de pedra dos judeus, ela o derrubaria?", a: "Tobias, o amonita.", r: "Neemias 4:3" },
+            { q: "Como os trabalhadores se dividiram para trabalhar em segurança após as ameaças de ataques dos inimigos?", a: "Metade trabalhava na obra e a outra metade segurava lanças, escudos, arcos e couraças.", r: "Neemias 4:16" },
+            { q: "Como os reconstrutores que carregavam materiais trabalhavam com relação às armas?", a: "Com uma das mãos faziam a obra e com a outra seguravam a arma.", r: "Neemias 4:17" },
+            { q: "O que o homem que ficava ao lado de Neemias segurava para dar alarme caso houvesse ataque?", a: "Uma trombeta (ou buzina).", r: "Neemias 4:18" },
+            { q: "Em quantos dias os muros de Jerusalém foram totalmente concluídos?", a: "Em 52 dias.", r: "Neemias 6:15" },
+            { q: "Qual era o nome do mês em que a muralha foi terminada?", a: "Mês de Elul.", r: "Neemias 6:15" },
+            { q: "Quem era o escriba que leu o Livro da Lei do Senhor para todo o povo na praça?", a: "Esdras.", r: "Neemias 8:1" }
+            // Nota: Você pode expandir este array até completar as 70+ questões desejadas.
+        ];
+
+        let perguntasDisponiveis = [...bancoDePerguntas];
+        let perguntaAtual = null;
+        let pontosEquipe1 = 0;
+        let pontosEquipe2 = 0;
+        let contadorPerguntasRespondidas = 0;
+
+        function iniciarJogo() {
+            const nome1 = document.getElementById('team1Input').value.trim() || "Equipe 1";
+            const nome2 = document.getElementById('team2Input').value.trim() || "Equipe 2";
+
+            document.getElementById('nameTeam1').innerText = nome1;
+            document.getElementById('nameTeam2').innerText = nome2;
+
+            document.getElementById('setupScreen').classList.remove('active');
+            document.getElementById('gameScreen').classList.add('active');
+            
+            atualizarContador();
+        }
+
+        function atualizarContador() {
+            document.getElementById('contadorRestantes').innerText = perguntasDisponiveis.length;
+        }
+
+        function sortearPergunta() {
+            if (perguntasDisponiveis.length === 0) {
+                alert("Fim do banco de dados! Todas as perguntas cadastradas já foram sorteadas.");
+                return;
+            }
+
+            const indiceAleatorio = Math.floor(Math.random() * perguntasDisponiveis.length);
+            perguntaAtual = perguntasDisponiveis.splice(indiceAleatorio, 1)[0];
+            contadorPerguntasRespondidas++;
+
+            document.getElementById('questionNumber').innerText = `Pergunta Sorteada nº ${contadorPerguntasRespondidas}`;
+            document.getElementById('questionText').innerText = perguntaAtual.q;
+            document.getElementById('questionRef').innerText = `Referência oculta até revelação`;
+            
+            document.getElementById('btnSortear').disabled = true;
+            document.getElementById('btnVerResposta').disabled = false;
+            document.getElementById('btnProxima').disabled = true;
+            
+            atualizarContador();
+        }
+
+        function revelarResposta() {
+            if (!perguntaAtual) return;
+
+            document.getElementById('answerText').innerText = perguntaAtual.a;
+            document.getElementById('questionRef').innerText = `Base Bíblica: ${perguntaAtual.r}`;
+            document.getElementById('answerBox').style.display = 'block';
+
+            document.getElementById('btnVerResposta').disabled = true;
+            document.getElementById('btnProxima').disabled = false;
+        }
+
+        function limparPainel() {
+            document.getElementById('questionNumber').innerText = "Próxima Pergunta";
+            document.getElementById('questionText').innerText = "Pronto para o próximo sorteio...";
+            document.getElementById('questionRef').innerText = "";
+            document.getElementById('answerBox').style.display = 'none';
+            document.getElementById('answerText').innerText = "";
+            
+            perguntaAtual = null;
+            document.getElementById('btnSortear').disabled = false;
+            document.getElementById('btnVerResposta').disabled = true;
+            document.getElementById('btnProxima').disabled = true;
+        }
+
+        function alterarPontos(equipe, valor) {
+            if (equipe === 1) {
+                pontosEquipe1 += valor;
+                if (pontosEquipe1 < 0) pontosEquipe1 = 0; // Impede pontuação negativa se desejar
+                document.getElementById('valTeam1').innerText = pontosEquipe1;
+            } else if (equipe === 2) {
+                pontosEquipe2 += valor;
+                if (pontosEquipe2 < 0) pontosEquipe2 = 0;
+                document.getElementById('valTeam2').innerText = pontosEquipe2;
+            }
+        }
+    </script>
+</body>
+</html>
